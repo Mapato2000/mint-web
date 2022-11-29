@@ -1,0 +1,26 @@
+{
+  "name": "smart-contracts",
+  "version": "0.0.1",
+  "description": "Smart Contracts",
+  "author": "Centre Easy",
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/centreeasy"
+  },
+  "dependencies": {
+    "@truffle/hdwallet-provider": "2.0.8"
+  },
+  "devDependencies": {
+    "truffle": "5.5.13"
+  },
+  "scripts": {
+    "version": "truffle version",
+    "test": "truffle test",
+    "compile": "truffle compile",
+    "migrate": "truffle migrate --reset",
+    "migrate-alastria": "truffle migrate --reset --network alastria",
+    "migrate-substrate": "truffle migrate --reset --network substrate",
+    "migrate-ropsten": "truffle migrate --reset --network ropsten",
+    "migrate-hedera": "cd hedera && node index.js"
+  }
+}
