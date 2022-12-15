@@ -79,19 +79,21 @@ class Repository {
     return this.postRequest(url, { data: params });
   }
 
-  postFile (url, files, params) {
-    const options = { headers: { 'Content-Type': 'multipart/form-data' } };
-
-    const formData = new FormData();
+  postFiles (url, files, params) {
+    const data = new FormData();
 
     for (const file of files) {
-      formData.append('files', file);
+      data.append('files', file);
     }
 
     for (const propt in params) {
-      this.appendArray(formData, params[propt], propt);
+      this.appendArray(data, params[propt], propt);
     }
-    options.data = formData;
+    const options = {
+      headers: { 'Content-Type': 'multipart/form-data' } ,
+      data: data
+    };
+
     return this.postRequest(url, options);
   }
 
@@ -112,7 +114,6 @@ class Repository {
     // options.headers["Access-Control-Allow-Headers"] = "accept";
     // options.headers["Access-Control-Allow-Origin"] = "*";
     options.headers["Authorization"] = this.buildAuthHeader();
-
     // Do the petition if no cancellable
     if (!this.cancel) {
       return axios(options);

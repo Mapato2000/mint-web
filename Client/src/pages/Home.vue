@@ -1,68 +1,67 @@
 <template>
-  <q-page padding>
-    <div class="row">
-      <div class="col-6">
-        <q-input v-model="text" outlined label="User" />
-      </div>
-      <div class="col-3">
-        <q-select v-model="selectable" outlined :options="options" label="Number of recommendations" />
-      </div>
-      <div class="col-3">
-        <q-btn color="primary" label="Recommend" @click="recommend" />
-      </div>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h5> Your address is {{address}}</h5>
+          <q-card class="my-card">
+            <q-card-actions vertical>
+            </q-card-actions>
+          </q-card>
+        </div>
+        </div>
     </div>
-    <div class="row">
-      <q-date v-model="date" />
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <DataTable />
-      </div>
-    </div>
-  </q-page>
 </template>
 
 <script>
-import { defineComponent } from 'vue'
-import DataTable from "components/DataTable";
-import ApiRepository from "../repositories/ApiRepository";
+import {defineComponent, ref} from 'vue'
+import SmartRepository from "src/repositories/SmartRepository"
+import axios from "axios";
 
-const text = ''
-const options = [1,2,3,4,5,6,7,8,9,10]
-const selectable = ''
-const date = '2021/06/01'
 export default defineComponent({
-  name: 'Home',
+  name: 'HomePage',
 
-  components: {
-    DataTable
-  },
+  components: { },
 
   setup () {
     return {
-      options,
+      address: ref(""),
+      NFTs: ref([])
     }
+  },
+  created () {
+    this.fetch();
   },
   data () {
-    return {
-      text,
-      selectable,
-      date
-    }
+    return { }
   },
   methods: {
-    recommend() {
-      this.testServer();
-    },
-    testServer() {
-      ApiRepository.exampleGet().then((res)=> {
-        console.log(res);
+    async fetch(){
+      await SmartRepository.getMyAddress().then(async (addr) => {
+        this.address = addr;
       })
-    }
+      this.getNFTs();
+    },
+    getNFTs () {
+      axios.get("https://api.chainbase.online/v1/account/nfts?chain_id=1&address=0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85", {
+        headers: {
+          "X-API-KEY": "",
+          "Content-Type": "application/json"
+        }
+        }).then((res) => {
+          console.log(res);
+      })
+    },
+    goTo(pageName){
+      this.$router.push({name: pageName});
+    },
   },
 })
 </script>
 
 <style scoped>
-
+.my-card{
+  width: 100%;
+  max-width: 250px;
+  margin: 50px auto 0 auto;
+}
 </style>
